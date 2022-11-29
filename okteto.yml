@@ -1,23 +1,12 @@
-icon: https://github.com/okteto/base-device2/raw/main/icon.png
 build:
-  base-device2:
+  base:
+    context: .
+  api:
+    context: api
+  frontend:
+    context: frontend
     dockerfile: Dockerfile
-  dev:
-    dockerfile: Dockerfile.dev
-
-deploy:
-  - kubectl apply -f dev/postgres.yml
-  - kubectl apply -f dev/redis.yml
-  - helm upgrade base-device2 chart --install --set image=${OKTETO_BUILD_CHAT_IMAGE}
-
-dev:
-  web:
-    image: ${OKTETO_BUILD_DEV_IMAGE}
-    environment:
-      - RAILS_ENV=development
-    command: ["bash"]
-    sync:
-      - .:/app
-    forward:
-      - 1234:1234
-      - 5234:db:5234
+    target: dev
+    depends_on: base
+    build_args:
+      SOURCE_IMAGE: ${OKTETO_BUILD_BASE_IMAGE}
