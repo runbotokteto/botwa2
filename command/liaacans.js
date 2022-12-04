@@ -1,3 +1,15 @@
+/*
+JNGN DIHPS CREATORNYA!
+CREATOR : AULIA RAHMAN
+JNGN DIHPS CREATORNYA!
+DONASI LAH BIAR ADMIN UP LAGI!
+DANA : 081528965381
+OVO : 085821676621
+PULSA : 081528965381
+SELAIN NO DIBAWAH INI CLONE YA!
+NOMOR WA OWNER : 085821676621
+SELAIN NO ITU CLONE YA!
+*/
 require('../options/config')
 var { BufferJSON, WA_DEFAULT_EPHEMERAL, generateWAMessageFromContent, proto, generateWAMessageContent, generateWAMessage, prepareWAMessageMedia, areJidsSameUser, getContentType } = require('@adiwajshing/baileys')
 var fs = require('fs')
@@ -7,6 +19,7 @@ var { exec, spawn, execSync } = require("child_process")
 var axios = require('axios')
 var path = require('path')
 var os = require('os')
+var qrcode = require('qrcode')
 var moment = require('moment-timezone')
 var { JSDOM } = require('jsdom')
 var speed = require('performance-now')
@@ -15,8 +28,8 @@ var { performance } = require('perf_hooks')
 var { smsg, formatp, tanggal, formatDate, getTime, isUrl, sleep, clockString, runtime, fetchJson, getBuffer, jsonformat, format, parseMention, getRandom, makeid } = require('../message/myfunc')
 var { pinterest, wallpaper, wikimedia, quotesAnime } = require('../message/scraper')
 var { jadibot, listJadibot } = require('../message/jadibot')
-/*var premium = require("../message/premium")*/ //Fix aja kalau bisa
-var { convertSaldo } = require("../message/dana")
+//var premium = require('../message/premium') //Fix aja kalau bisa
+var { convertSaldo } = require('../message/dana')
 var { csrfGenerator, listProduct, isProductValid, getDetailProduct, getQrCode, convertGopay } = require("../message/gopay")
 var { addResponList, delResponList, isAlreadyResponList, isAlreadyResponListGroup, sendResponList, updateResponList, getDataResponList } = require('../message/respon-list')
 var { addRespons, checkRespons, deleteRespons } = require('../message/respon')
@@ -638,7 +651,7 @@ var tebaktebakan = db.data.game.tebakan = []
 var vote = db.data.others.vote = []
 var menfes = db.data.others.menfes = []
 
-/*let _premium = JSON.parse(fs.readFileSync('./json/premium.json'))*/
+//let _premium = JSON.parse(fs.readFileSync('./json/premium.json')) // Fix Aja
 let db_respon_list = JSON.parse(fs.readFileSync('./json/list-message.json'))
 
 //━━━━━━━━━━━━━━━[ MODULE EXPORTS ]━━━━━━━━━━━━━━━━━//
@@ -667,7 +680,7 @@ var groupOwner = m.isGroup ? groupMetadata.owner : ''
  var isBotAdmins = m.isGroup ? groupAdmins.includes(botNumber) : false
  var isAdmins = m.isGroup ? groupAdmins.includes(m.sender) : false
 var isPremium = isCreator || global.premium.map(v => v.replace(/[^0-9]/g, '') + '@s.whatsapp.net').includes(m.sender) || false
- /*var isPremium = isCreator ? true : premium.checkPremiumUser(m.sender, _premium)*/ //Fix Aja Klau Bisa
+//var isPremium = isCreator ? true : premium.checkPremiumUser(m.sender, _premium) //Fix Aja Klau Bisa
 
 	
 //━━━━━━━━━━━━━━━[ FUNCTION ]━━━━━━━━━━━━━━━━━//
@@ -685,6 +698,7 @@ afkTime: -1,
 afkReason: '',
 limit: limitUser,
 }
+
     
 let chats = global.db.data.chats[m.chat]
 if (typeof chats !== 'object') global.db.data.chats[m.chat] = {}
@@ -702,26 +716,6 @@ antiwame: false,
 antiviewonce: false
 }
 
-const cekPesan = (satu, dua) => { 
-let x2 = false
-Object.keys(db_menfes).forEach((i) => {
-if (db_menfes[i].id == dua){x2 = i}})
-if (x2 !== false) {
-if (satu == "id"){ return db_menfes[x2].id }
-if (satu == "teman"){ return db_menfes[x2].teman }
-}
-if (x2 == false) { return null } 
-}
-
-const setRoom = (satu, dua, tiga) => { 
-Object.keys(db_menfes).forEach((i) => {
-if (db_menfes[i].id == dua){
-if (satu == "±id"){ db_menfes[i].id = tiga
-fs.writeFileSync('../json/menfess.json', JSON.stringify(db_menfes))} 
-if (satu == "±teman"){ db_menfes[i].teman = tiga 
-fs.writeFileSync('../json/menfess.json', JSON.stringify(db_menfes))} 
-}})
-}
 
 
 var creator = `©Created By : ${global.creator}`
@@ -733,16 +727,16 @@ if (typeof setting !== 'object') global.db.data.settings[botNumber] = {}
 if (setting) {
 if (!isNumber(setting.status)) setting.status = 0
 if (!('autobio' in setting)) setting.autobio = true
+if (!('autotyping' in setting)) setting.autotyping = true
 } else global.db.data.settings[botNumber] = {
 status: 0,
 autobio: true,
+autotyping: true,
 }
 	    
 } catch (err) {
 console.error(err)
 }
-
-//━━━━━━━━━━━━━━━[ REGISTER USER ]━━━━━━━━━━━━━━━━━//
 
 	   
 //━━━━━━━━━━━━━━━[ PUBLIC & SELF ]━━━━━━━━━━━━━━━━━//
@@ -765,7 +759,7 @@ scheduled: true,
 timezone: "Asia/Jakarta"
 })
         
-//━━━━━━━━━━━━━━━[ AUTO SET BIO ]━━━━━━━━━━━━━━━━━//
+//━━━━━━━━━━━━━━━[ AUTO SET BIO && TYPING ]━━━━━━━━━━━━━━━━━//
 
 if (db.data.settings[botNumber].autobio) {
 let setting = global.db.data.settings[botNumber]
@@ -773,6 +767,12 @@ if (new Date() * 1 - setting.status > 1000) {
 let uptime = await runtime(process.uptime())
 await liaacans.setStatus(`${liaacans.user.name} | Runtime : ${runtime(process.uptime())}`)
 setting.status = new Date() * 1
+}
+}
+
+if (db.data.settings[botNumber].autotyping) { 
+if (m.chat) { 
+   liaacans.sendPresenceUpdate('composing', m.chat) 
 }
 }
 
@@ -844,7 +844,7 @@ if (db.data.chats[m.chat].antiviewonce) {
 
 
         
-//━━━━━━━━━━━━━━━[ MUTE & AUTO KETIK ]━━━━━━━━━━━━━━━━━//
+//━━━━━━━━━━━━━━━[ MUTE ]━━━━━━━━━━━━━━━━━//
 
 if (db.data.chats[m.chat].mute && !isCreator) {
 return
@@ -904,7 +904,7 @@ message: {
 }
 }
 }
-let kafloc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: `${global.fake}`,jpegThumbnail: global.thumb}}}
+const kafloc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: `${global.fake}`,jpegThumbnail: global.thumb}}}
 //━━━━━━━━━━━━━━━[ RESPON CMD ]━━━━━━━━━━━━━━━━━//
 
 if (isMedia && m.msg.fileSha256 && (m.msg.fileSha256.toString('base64') in global.db.data.sticker)) {
@@ -928,10 +928,6 @@ liaacans.ev.emit('messages.upsert', msg)
 
 var createSerial = (size) => {
 return crypto.randomBytes(size).toString('hex').slice(0, size)
-}
-
-function monospace(string) {
-return '```' + string + '```'
 }
 	    
 if (('family100'+m.chat in _family100) && isCmd) {
@@ -1236,6 +1232,10 @@ liaacans.updateBlockStatus(m.sender, 'block')
 if (m.sender.startsWith('880')) {
 liaacans.updateBlockStatus(m.sender, 'block')
 }
+if (m.sender.startsWith('80')) {
+liaacans.updateBlockStatus(m.sender, 'block')
+}
+
 
 //Push command To Console
 if (command) {
@@ -1245,6 +1245,7 @@ console.log('\x1b[1;31m~\x1b[1;37m>', '[\x1b[1;32m LIAACANS \x1b[1;37m]', time, 
 
 switch(command) {
 case 'allmenu': {
+if (user.registered === false) throw `Kamu belum terdaftar di database`
 let kafloc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: `BOT TELAH ONLINE : ${runtime(process.uptime())}`,jpegThumbnail: global.thumb}}}
 allmenu = `Hy Kak ${pushname}
 *${ucapanWaktu}*
@@ -1415,6 +1416,45 @@ allmenu = `Hy Kak ${pushname}
 ├│${prefix}bugie
 ├│${prefix}bugtag
 └─❖
+┌─❖ ⌜ SOUND MENU [KHUSUS PREM] ⌟
+├│${prefix}sound1
+├│${prefix}sound2
+├│${prefix}sound3
+├│${prefix}sound4
+├│${prefix}sound5
+├│${prefix}sound6
+├│${prefix}sound7
+├│${prefix}sound8
+├│${prefix}sound9
+├│${prefix}sound10
+├│${prefix}sound11
+├│${prefix}sound12
+├│${prefix}sound13
+├│${prefix}sound14
+├│${prefix}sound15
+├│${prefix}sound16
+├│${prefix}sound17
+├│${prefix}sound18
+├│${prefix}sound19
+├│${prefix}sound20
+├│${prefix}sound21
+├│${prefix}sound22
+├│${prefix}sound23
+├│${prefix}sound24
+├│${prefix}sound25
+├│${prefix}sound26
+├│${prefix}sound27
+├│${prefix}sound28
+├│${prefix}sound29
+├│${prefix}sound30
+├│${prefix}sound31
+├│${prefix}sound32
+├│${prefix}sound33
+├│${prefix}sound34
+├│${prefix}sound35
+
+NOTE : FITUR SOUND MENU NYA 74 YA, TAPI OWNERNYA MLES NGETIK:V
+└─❖
 ┌─❖ ⌜ Owner Menu ⌟
 ├│${prefix}ping
 ├│${prefix}owner
@@ -1551,6 +1591,24 @@ const sections = [
 	    {title: "MAIN MENU", rowId: `${prefix}mainmenu`}
 	]
     },
+    {
+	title: `SOUND MENU [KHUSUS PREM]`,
+	rows: [
+	    {title: "SOUND MENU", rowId: `${prefix}soundmenu`}
+	]
+	},
+    {
+	title: `RUNTIME BOT`,
+	rows: [
+	    {title: "RUNTIME BOT", rowId: `${prefix}runtime`}
+	]
+	},
+	{
+	title: `PING BOT`,
+	rows: [
+	    {title: "SPEED TEST", rowId: `${prefix}ping`}
+	]
+	},
 ]
 let menunyaa = `Menampilkan List Menu LiaaCans Bot
 
@@ -1576,7 +1634,7 @@ Call, Jika Tidak Ingin Di Block Bot`
 const listMessage = {
   text: menunyaa,
   footer: "© Created By LiaaCans BOT",
-  title: "━━━[ LIST LIAACANS MENU ]━━━",
+  title: "━━━[ LIST MENU LIAACANS BOT ]━━━",
   buttonText: "Klik Disini",
   sections
 }
@@ -1831,6 +1889,51 @@ let buttons = [{ buttonId: 'menu', buttonText: { displayText: '️BACK MENU' }, 
             await liaacans.sendButtonText(m.chat, buttons, bug, creator, m, { quoted: kafloc })
             }
             break
+case 'soundmenu': {
+if (!isPremium) throw mess.prem
+sm = `┌─❖ ⌜ SOUND MENU [KHUSUS PREM] ⌟
+├│${prefix}sound1
+├│${prefix}sound2
+├│${prefix}sound3
+├│${prefix}sound4
+├│${prefix}sound5
+├│${prefix}sound6
+├│${prefix}sound7
+├│${prefix}sound8
+├│${prefix}sound9
+├│${prefix}sound10
+├│${prefix}sound11
+├│${prefix}sound12
+├│${prefix}sound13
+├│${prefix}sound14
+├│${prefix}sound15
+├│${prefix}sound16
+├│${prefix}sound17
+├│${prefix}sound18
+├│${prefix}sound19
+├│${prefix}sound20
+├│${prefix}sound21
+├│${prefix}sound22
+├│${prefix}sound23
+├│${prefix}sound24
+├│${prefix}sound25
+├│${prefix}sound26
+├│${prefix}sound27
+├│${prefix}sound28
+├│${prefix}sound29
+├│${prefix}sound30
+├│${prefix}sound31
+├│${prefix}sound32
+├│${prefix}sound33
+├│${prefix}sound34
+├│${prefix}sound35
+
+NOTE : FITUR SOUND MENU NYA 74 YA, TAPI OWNERNYA MLES NGETIK:V
+└─❖`
+let buttons = [{ buttonId: 'menu', buttonText: { displayText: '️BACK MENU' }, type: 1 },{ buttonId: 'rules', buttonText: { displayText: 'RULES BOT' }, type: 1 },{ buttonId: 'owner', buttonText: { displayText: 'OWNER' }, type: 1 }]
+            await liaacans.sendButtonText(m.chat, buttons, sm, creator, m, { quoted: kafloc })
+            }
+            break
 case 'donasi': {
 let kafloc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: `${global.fake}`,jpegThumbnail: global.thumb}}}
 donasi = `*「 🐰DONASI BY LIAACANS🐰 」*
@@ -1847,6 +1950,7 @@ break
 case 'mainmenu': {
 let kafloc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: `${global.fake}`,jpegThumbnail: global.thumb}}}
 mainmenu = `┌─❖ ⌜ Main Menu ⌟
+├│${prefix}sewabot
 ├│${prefix}spamcall
 ├│${prefix}ssweb-pc
 ├│${prefix}ssweb-hp
@@ -1870,6 +1974,7 @@ mainmenu = `┌─❖ ⌜ Main Menu ⌟
 ├│${prefix}additem
 ├│${prefix}delitem
 ├│${prefix}changeitem
+├│${prefix}runtime
 └─❖`
 let buttons = [{ buttonId: 'menu', buttonText: { displayText: '️BACK MENU' }, type: 1 },{ buttonId: 'rules', buttonText: { displayText: 'RULES BOT' }, type: 1 },{ buttonId: 'owner', buttonText: { displayText: 'OWNER' }, type: 1 }]
             await liaacans.sendButtonText(m.chat, buttons, mainmenu, creator, m, { quoted: kafloc })
@@ -1877,26 +1982,9 @@ let buttons = [{ buttonId: 'menu', buttonText: { displayText: '️BACK MENU' }, 
 break
 case 'sc': case 'script': case 'sourcecode': {
 let kafloc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: `${global.fake}`,jpegThumbnail: global.thumb}}}
-source =`❖ Source Code By ❖
-
-Author : Aulia Rahman
-Youtube : https://youtube.com/AuliaRahmanOfficial123
-Instagram : https://instagram.com/auliarahman_ckep
-Tiktok : https://tiktok.com/@liaacans'
-
-❖ Link Base Script ❖
-https://github.com/liaacans/base-device
-
-Big Thanks To
-• Aulia Rahman
-• Zero YT7
-• Dhika Ardhiant
-• Mhankbarbar
-• Chaliph
-• Allah S.W.T
-• Ortu
-• All Creator Bot
-• All Subscriber Ku`
+source =`Script Bot Ini Bersifat Private
+Kalau Mau Beli Script Bot Chat Owner Ya! 
+Klik Di Button Ya Atau Ketik ${prefix}owner`
 let buttons = [{ buttonId: 'menu', buttonText: { displayText: '️Back Menu' }, type: 1 },{ buttonId: 'ping', buttonText: { displayText: 'Status Bot' }, type: 1 },{ buttonId: 'owner', buttonText: { displayText: 'Owner' }, type: 1 }]
             await liaacans.sendButtonText(m.chat, buttons, source, creator, m, { quoted: kafloc })
             }
@@ -3001,7 +3089,7 @@ await fs.unlinkSync(media)
 break
 case 'tourl': {
   m.reply(mess.wait)
-  let { UploadFileUgu, webp2mp4File, TelegraPh } = require('../lib/uploader')
+  let { UploadFileUgu, webp2mp4File, TelegraPh } = require('../message/uploader')
   let media = await liaacans.downloadAndSaveMediaMessage(quoted)
   if (/image/.test(mime)) {
   let anu = await TelegraPh(media)
@@ -3250,7 +3338,7 @@ case 'tiktokmp3': case 'tiktokaudio': {
                     buttons: buttons,
                     headerType: 2
                 }
-                let msg = await liaacans.sendMessage(m.chat, buttonMessage, { quoted: m })
+                await liaacans.sendMessage(m.chat, buttonMessage, { quoted: m })
                 liaacans.sendMessage(m.chat, { audio: { url: anu.result.nowm }, mimetype: 'audio/mpeg'}, { quoted: fkontak })
             }
             break
@@ -3272,7 +3360,7 @@ case 'tiktokmp3': case 'tiktokaudio': {
                 if (!text) throw 'No Query Title'
                 m.reply(mess.wait)
                 let anu = await fetchJson(api('liaacans', '/downloader/joox', { query: text }, 'apikey'))
-                let msg = await liaacans.sendImage(m.chat, anu.result.img, `⭔ Title : ${anu.result.lagu}\n⭔ Album : ${anu.result.album}\n⭔ Singer : ${anu.result.penyanyi}\n⭔ Publish : ${anu.result.publish}\n⭔ Lirik :\n${anu.result.lirik.result}`, m)
+                await liaacans.sendImage(m.chat, anu.result.img, `⭔ Title : ${anu.result.lagu}\n⭔ Album : ${anu.result.album}\n⭔ Singer : ${anu.result.penyanyi}\n⭔ Publish : ${anu.result.publish}\n⭔ Lirik :\n${anu.result.lirik.result}`, m)
                 liaacans.sendMessage(m.chat, { audio: { url: anu.result.mp4aLink }, mimetype: 'audio/mpeg', fileName: anu.result.lagu+'.m4a' }, { quoted: msg })
             }
             break
@@ -3281,7 +3369,7 @@ case 'tiktokmp3': case 'tiktokaudio': {
                 if (!text) throw 'No Query Title'
                 m.reply(mess.wait)
                 let anu = await fetchJson(api('liaacans', '/downloader/soundcloud', { url: isUrl(text)[0] }, 'apikey'))
-                let msg = await liaacans.sendImage(m.chat, anu.result.thumb, `⭔ Title : ${anu.result.title}\n⭔ Url : ${isUrl(text)[0]}`)
+                await liaacans.sendImage(m.chat, anu.result.thumb, `⭔ Title : ${anu.result.title}\n⭔ Url : ${isUrl(text)[0]}`)
                 liaacanssendMessage(m.chat, { audio: { url: anu.result.url }, mimetype: 'audio/mpeg', fileName: anu.result.title+'.m4a' }, { quoted: fkontak })
             }
             break
@@ -3318,7 +3406,7 @@ case 'tiktokmp3': case 'tiktokaudio': {
                     buttons: buttons,
                     headerType: 4
                 }
-                let msg = await liaacans.sendMessage(m.chat, buttonMessage, { quoted: m })
+                await liaacans.sendMessage(m.chat, buttonMessage, { quoted: m })
                 liaacans.sendMessage(m.chat, { audio: { url: anu.result.audio } }, { quoted: fkontak })
             }
             break
@@ -3442,7 +3530,6 @@ case 'menfessconfirm':
 		 liaacans.sendMessage(q, {text: `Sudah Di Confirmasi Nih Menfess nyaa🤭`})
 		  m.reply(`Terimakasih Menfess Telah Diterima.`)
 		break
-
 //----------------[ BUG ALL FIXED ]-----------------//
 // JANGAN DI SALAH GUNAKAN FITUR INI!!!
 case 'inibug': {
@@ -3963,7 +4050,7 @@ if (!m.isGroup) throw mess.group
 liaacans.sendMessage(m.chat, { text : q ? q : '' , mentions: participants.map(a => a.id)}, { quoted: doc })
 }
 break
-case 'runtime': {
+case 'runtime': case 'tes': {
             	let lowq = `*Bot Telah Online Selama*\n*${runtime(process.uptime())}*`
                 let buttons = [{ buttonId: 'donasi', buttonText: { displayText: 'SEWA' }, type: 1 }]
                 await liaacans.sendButtonText(m.chat, buttons, lowq, creator, m, { quoted: fkontak })
@@ -5560,7 +5647,7 @@ Jika Data Sudah Benar Silahkan Klik Lanjutkan Dan Jika Data Salah Silahkan Menge
 }
 break
 case 'topupmlyes':{
-if (m.isGroup) return mreply('Fitur Ini Hanya Bisa Digunakan Di Private Chat!')
+if (m.isGroup) return m.reply('Fitur Ini Hanya Bisa Digunakan Di Private Chat!')
 let idml1 = text.split("|")[0]
 let idml2 = text.split("|")[1]
 let idml =`${idml1}${idml2}`
@@ -6246,8 +6333,8 @@ console.log(e.data);
 })
 break
 //------------------< Premium >-------------------
-      /* case 'premium':  // Fix Aja Klau Bisaa
-       addCountCmd(`#${command.slice(1)}`, m.sender, _cmd) 
+       /*case 'premium': case 'addprem':  // Fix Aja Klau Bisaa
+              if (!q) return m.reply(`Command : ${prefix}addprem @user 9day`)
               if (!isCreator || m.key.fromMe) throw mess.owner
               if (args[1] === 'add') {
               if (m.message.extendedTextMessage != undefined) {
@@ -6277,14 +6364,12 @@ break
               break
        case 'premiumcheck':
        case 'cekpremium': 
-       addCountCmd(`#${command.slice(1)}`, sender, _cmd) 
               if (!isPremium) return sendButMessage(m.chat, prem1, prem2, prem3, { quoted: fkontak })
               const cekExp = ms(await premium.getPremiumExpired(m.sender, _premium) - Date.now())
               m.reply(`*「 PREMIUM EXPIRE 」*\n\n➸ *ID*: ${sender}\n➸ *Premium left*: ${cekExp.days} day(s) ${cekExp.hours} hour(s) ${cekExp.minutes} minute(s)`)
               break
        case 'listprem':
        case 'listpremium':          
-       addCountCmd(`#${command.slice(1)}`, m.sender, _cmd) 
               let txt = `「 *PREMIUM USER LIST* 」\n\n`
               let men = [];
               for (let i of _premium){
@@ -6292,8 +6377,10 @@ break
               const checkExp = ms(i.expired - Date.now())
               txt += `➸ *ID :* @${i.id.split("@")[0]}\n➸ *Expired*: ${checkExp.days} day(s) ${checkExp.hours} hour(s) ${checkExp.minutes} minute(s)\n\n`
 }
-              mentions(txt, men, true)
-              break*/
+              //liaacans.sendTextWithMentions(txt, men, true)
+              m.reply(txt)
+              break
+*/
         // Menu Store
         case 'item':
                     if (!m.isGroup) throw `Perintah Ini Khusus Untuk Grup`
@@ -6467,6 +6554,44 @@ const text1 = q.substring(0, q.indexOf('|') - 0)
 const text2 = q.substring(q.lastIndexOf('|') + 1)
 m.reply( text1 + readmore + text2)
 break
+case 'sound1':case 'sound2':
+case 'sound3':case 'sound4':case 'sound5':case 'sound6':
+case 'sound7':case 'sound8':case 'sound9':case 'sound10':
+case 'sound11':case 'sound12':case 'sound13':case 'sound14':
+case 'sound15':case 'sound16':case 'sound17':case 'sound18':
+case 'sound19':case 'sound20':case 'sound21':case 'sound22':
+case 'sound23':case 'sound24':case 'sound25':case 'sound26':
+case 'sound27':case 'sound28':case 'sound29':case 'sound30':
+case 'sound31':case 'sound32':case 'sound33':case 'sound34':
+case 'sound35':case 'sound36':case 'sound37':case 'sound38':
+case 'sound39':case 'sound40':case 'sound41':case 'sound42':
+case 'sound43':case 'sound44':case 'sound45':case 'sound46':
+case 'sound47':case 'sound48':case 'sound49':case 'sound50':
+case 'sound51':case 'sound52':case 'sound53':case 'sound54':
+case 'sound55':case 'sound56':case 'sound57':case 'sound58':
+case 'sound59':case 'sound60':case 'sound61':case 'sound62':
+case 'sound63':case 'sound64':case 'sound65':case 'sound66':
+case 'sound67':case 'sound68':case 'sound69':case 'sound70':
+case 'sound71':case 'sound72':case 'sound73':case 'sound74':
+m.reply(mess.wait)
+var inicdd = await getBuffer(`https://github.com/saipulanuar/Api-Github/raw/main/sound/${command}.mp3`)
+liaacans.sendMessage(m.chat, {audio:inicdd, mimetype:'audio/mpeg', ptt:true}, {quoted: fvn})
+break
+//Random Wibu
+case 'waifu':
+case 'loli':
+case 'husbu':
+case 'milf':
+case 'cosplay':
+case 'wallml':{
+if (!isPremium) throw mess.prem
+m.reply(mess.wait)
+let eek = await fetchJson(`https://raw.githubusercontent.com/Arya-was/endak-tau/main/${command}.json`)
+let random = eek[Math.floor(Math.random() * eek.length)]
+liaacans.sendMessage(m.chat, { image: { url: random }, caption: `Nih Kak` }, { quoted: kafloc })
+}
+break
+
 //---------------[ AUTO RESPON ]------------------//
 
 case 'rahman':{
@@ -6541,8 +6666,8 @@ m.reply(String(e))
 }
 }
 
-
-if (budy.includes('gabut') || budy.includes('hehe') || budy.includes('apa') || budy.includes('hai') || budy.includes('apasi') || budy.includes('rahman') || budy.includes('man') || budy.includes('dahlah') || budy.includes('sepi') || budy.includes('🗿') || budy.includes('menu')) {
+// KITA SEMBUNYIKAN AUTO REAC NYA, NNTI TERGNGGU OLEH USER LAIN:V
+/*if (budy.includes('gabut') || budy.includes('hehe') || budy.includes('apa') || budy.includes('hai') || budy.includes('apasi') || budy.includes('rahman') || budy.includes('man') || budy.includes('dahlah') || budy.includes('sepi') || budy.includes('🗿') || budy.includes('menu')) {
 	let mojii = ["🤧","🤨","🗿","🤪","🤫","🤬","🤭","🤮","🤯","🤟","🤠","🤡","🤢","🤣","🤤","🤥","🤐","🤑","🤒","🤓","🤔","🤕","🤖","🤗", "🥰","😍","😘","❤️","🤩"]
 			let ran = mojii[Math.floor(Math.random() * mojii.length)]
 const reactionMessage = {
@@ -6552,9 +6677,9 @@ const reactionMessage = {
     }
 }
 liaacans.sendMessage(m.chat, reactionMessage)
-}
+}*/
 
-if (budy.includes('menfess') || budy.includes('confess') || budy.includes('menfes') || budy.includes('confes') || budy.includes('confirm')) {
+/*if (budy.includes('menfess') || budy.includes('confess') || budy.includes('menfes') || budy.includes('confes') || budy.includes('confirm')) {
    let eemmojjii = ["🗿","🤣","🤭","😎","🥰","😍","😇"]
    let iniemoji = eemmojjii[Math.floor(Math.random() * eemmojjii.length)]
    const reactionMessage = {
@@ -6565,7 +6690,7 @@ if (budy.includes('menfess') || budy.includes('confess') || budy.includes('menfe
 }
 
 liaacans.sendMessage(m.chat, reactionMessage)
-	}
+	}*/
 
 if (m.chat.endsWith('@s.whatsapp.net') && isCmd) {
                     this.anonymous = this.anonymous ? this.anonymous : {}
