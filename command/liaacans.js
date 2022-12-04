@@ -1245,7 +1245,6 @@ console.log('\x1b[1;31m~\x1b[1;37m>', '[\x1b[1;32m LIAACANS \x1b[1;37m]', time, 
 
 switch(command) {
 case 'allmenu': {
-if (user.registered === false) throw `Kamu belum terdaftar di database`
 let kafloc = {key : {participant : '0@s.whatsapp.net', ...(m.chat ? { remoteJid: `status@broadcast` } : {}) },message: {locationMessage: {name: `BOT TELAH ONLINE : ${runtime(process.uptime())}`,jpegThumbnail: global.thumb}}}
 allmenu = `Hy Kak ${pushname}
 *${ucapanWaktu}*
