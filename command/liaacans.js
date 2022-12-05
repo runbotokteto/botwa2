@@ -2500,7 +2500,7 @@ Lihat list Pesan Dengan ${prefix}listmsg`)
             }
             break
             case 'listmsg': {
-                let msgs = JSON.parse(fs.readFileSync('./src/database.json'))
+                let msgs = JSON.parse(fs.readFileSync('./json/datamsg.json'))
 	        let seplit = Object.entries(global.db.data.database).map(([nama, isi]) => { return { nama, ...isi } })
 		let teks = '「 LIST DATABASE 」\n\n'
 		for (let i of seplit) {
