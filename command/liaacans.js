@@ -1609,9 +1609,7 @@ const sections = [
 	]
 	},
 ]
-let menunyaa = `Menampilkan List Menu LiaaCans Bot
-
-Hai Kak ${pushname}
+let menunyaa = `Hai Kak ${pushname}
 *${ucapanWaktu}*
 ┌─❖ ⌜ 𝙄𝙉𝙁𝙊 𝙐𝙎𝙀𝙍 ⌟
 ├ *Nama* : ${pushname}
@@ -1633,7 +1631,6 @@ Call, Jika Tidak Ingin Di Block Bot`
 const listMessage = {
   text: menunyaa,
   footer: "© Created By LiaaCans BOT",
-  title: "━━━[ LIST MENU LIAACANS BOT ]━━━",
   buttonText: "Klik Disini",
   sections
 }
